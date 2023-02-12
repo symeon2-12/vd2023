@@ -44,8 +44,8 @@ const CursorDrag = styled.div<{
   background: radial-gradient(
     circle,
     rgba(0, 0, 0, 0) 0%,
-    rgba(245, 218, 40, 0.7) 5%,
-    rgba(159, 88, 30, 1) 11%,
+    rgba(245, 218, 40, 0.7) 4%,
+    rgba(159, 88, 30, 1) 10%,
     rgba(0, 2, 3, 1) 18%
   );
 

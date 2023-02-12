@@ -1,17 +1,35 @@
 "use client";
 import Head from "next/head";
 import Image from "next/image";
-import { Inter } from "@next/font/google";
+import { Indie_Flower } from "@next/font/google";
+import { Beau_Rivage } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+const f1 = Indie_Flower({ subsets: ["latin"], weight: "400" });
+const f2 = Beau_Rivage({ subsets: ["latin-ext", "latin"], weight: "400" });
 
 const Main = styled.main`
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-size: 3rem;
+  font-weight: bold;
+  @media (max-width: 800px) {
+    font-size: 2rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 1.3rem;
+  }
+`;
+const Text = styled.div`
+  max-width: 1000px;
+  justify-content: center;
 `;
 
 const CursorDrag = styled.div<{
@@ -20,13 +38,28 @@ const CursorDrag = styled.div<{
   width: number;
   height: number;
 }>`
-  display: block;
-  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(245, 218, 40, 0.7) 5%,
+    rgba(159, 88, 30, 1) 11%,
+    rgba(0, 2, 3, 1) 18%
+  );
+
   position: absolute;
-  left: ${(props) => props.x - props.width / 2 + "px"};
-  top: ${(props) => props.y - props.height / 2 + "px"};
-  height: ${(props) => props.height + "px"};
-  width: ${(props) => props.width + "px"};
+  /* left: ${(props) => props.x - props.width / 2 + "px"}; */
+  /* top: ${(props) => props.y - props.height / 2 + "px"}; */
+  left: calc(
+    ${(props) => props.x + "px"} - ${(props) => props.width / 2 + "vw"}
+  );
+  top: calc(
+    ${(props) => props.y + "px"} - ${(props) => props.height / 2 + "vh"}
+  );
+  height: ${(props) => props.height + "vh"};
+  width: ${(props) => props.width + "vw"};
 `;
 
 const flickerAnim = keyframes`
@@ -43,6 +76,7 @@ const Flame = styled.div`
   width: 60px;
   height: 60px;
   position: relative;
+  top: 100px;
   transform-origin: center bottom;
   animation-name: ${flickerAnim};
   animation-duration: 30ms;
@@ -109,8 +143,53 @@ const BlackFlame = styled(FlameAll)`
   box-shadow: 0px 0px 15px 10px black;
 `;
 
+const TextTimeLeft = styled.p`
+  text-align: center;
+`;
+const VText = styled.p`
+  text-align: center;
+  margin: 0 15px 0 15px;
+`;
+
+const VText2 = styled(VText)`
+  text-align: left;
+  margin-top: 15px;
+`;
+
+const VText3 = styled(VText)`
+  text-align: left;
+`;
+
+const VTextAfter = styled(VText)``;
+
+const vDay = new Date("2023-02-12 00:00");
+
+function msToTime(timeInms: number) {
+  // Pad to 2 or 3 digits, default is 2
+  function pad(n: number, z?: number) {
+    z = z || 2;
+    return ("00" + n).slice(-z);
+  }
+
+  var ms = timeInms % 1000;
+  timeInms = (timeInms - ms) / 1000;
+  var secs = timeInms % 60;
+  timeInms = (timeInms - secs) / 60;
+  var mins = timeInms % 60;
+  timeInms = (timeInms - mins) / 60;
+  var hrs = timeInms % 24;
+  var days = (timeInms - hrs) / 24;
+
+  return (
+    pad(days) + "d " + pad(hrs) + "h " + pad(mins) + "m " + pad(secs) + "s"
+  );
+}
+
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [timeLeftToVD, setTimeLeftToVD] = useState(
+    vDay.getTime() - new Date("2023-02-12 00:00").getTime()
+  );
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -122,6 +201,32 @@ export default function Home() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
+  }, []);
+
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const getTime = async () => {
+      const a = await fetch("https://worldtimeapi.org/api/timezone/" + tz)
+        .then((response) => response.json())
+        .then((data) => {
+          return data.datetime;
+        });
+
+      setTimeLeftToVD(vDay.getTime() - new Date(a).getTime());
+    };
+
+    getTime();
+
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeftToVD((seconds) => seconds - 1000);
+    }, 1000);
+    console.log("is it time", timeLeftToVD, timeLeftToVD < 0);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -144,9 +249,40 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/icons8-favorite-64.png" />
       </Head>
-      <Main>
-        asdfasdf2 {mousePos.x} {mousePos.y}
-        <CursorDrag x={mousePos.x} y={mousePos.y} height={100} width={100}>
+      <Main className={f2.className}>
+        <Text>
+          {timeLeftToVD > 0 && (
+            <>
+              <TextTimeLeft className={f1.className}>
+                ❤️ Czas do Walentynek:
+              </TextTimeLeft>
+              <TextTimeLeft className={f1.className}>
+                {msToTime(timeLeftToVD)}
+              </TextTimeLeft>
+            </>
+          )}
+          {/* prettier-ignore */}
+          {timeLeftToVD <= 0 && (
+            <>
+              <VText>Najdroższa Natuś</VText>
+              <VText>Dziękuję Ci, że jesteś moją Walentyką❤️</VText>
+              <VText>Ale ja Kocham Cię każdego dnia tak samo...</VText>
+              <VText>Czekaj. Każdego dnia chcę Cię kochać coraz bardziej</VText>
+              <VText>
+                Chcę, żebyś czuła, że będę przy Tobie w każdej sytuacji{" "}
+              </VText>
+              <VText>Moje serce śmieje się z Twoim </VText>
+              <VText>Moja dusza płacze z Twoją </VText>
+              <VText>Mój duch raduje się z Twoim</VText>
+              <VText>Dziękuję Ci, że jesteś</VText>
+              <VText2>Na zawsze Twój</VText2>
+              <VText3>Szymuś</VText3>
+              {/* asdfasdf2 {mousePos.x} {mousePos.y} timeLeft: {timeLeftToVD} timeLeft2:{" "}
+        {msToTime(timeLeftToVD)} */}
+            </>
+          )}
+        </Text>
+        <CursorDrag x={mousePos.x} y={mousePos.y} height={400} width={400}>
           <Flame>
             <RedFlame />
             <OrangeFlame />

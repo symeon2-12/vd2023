@@ -162,7 +162,7 @@ const VText3 = styled(VText)`
 
 const VTextAfter = styled(VText)``;
 
-const vDay = new Date("2023-02-12 00:00");
+const vDay = new Date("2023-02-14 00:00");
 
 function msToTime(timeInms: number) {
   // Pad to 2 or 3 digits, default is 2
@@ -188,7 +188,7 @@ function msToTime(timeInms: number) {
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [timeLeftToVD, setTimeLeftToVD] = useState(
-    vDay.getTime() - new Date("2023-02-14 00:00").getTime()
+    vDay.getTime() - new Date("2023-02-12 00:00").getTime()
   );
 
   useEffect(() => {

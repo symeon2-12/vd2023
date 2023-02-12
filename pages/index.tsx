@@ -244,8 +244,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>NN</title>
-        <meta name="description" content="$$$$$insert" />
+        <title>Walentynki 2023</title>
+        <meta name="description" content="conent" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/icons8-favorite-64.png" />
       </Head>

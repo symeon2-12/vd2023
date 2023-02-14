@@ -282,7 +282,7 @@ export default function Home() {
             </>
           )}
         </Text>
-        <CursorDrag x={mousePos.x} y={mousePos.y} height={400} width={400}>
+        {/* <CursorDrag x={mousePos.x} y={mousePos.y} height={400} width={400}>
           <Flame>
             <RedFlame />
             <OrangeFlame />
@@ -291,7 +291,7 @@ export default function Home() {
             <BlueFlame />
             <BlackFlame />
           </Flame>
-        </CursorDrag>
+        </CursorDrag> */}
       </Main>
     </>
   );

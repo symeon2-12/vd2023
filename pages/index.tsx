@@ -162,7 +162,7 @@ const VText3 = styled(VText)`
 
 const VTextAfter = styled(VText)``;
 
-const vDay = new Date("2023-02-14 00:00");
+const vDay = new Date("2023-02-11 00:00");
 
 function msToTime(timeInms: number) {
   // Pad to 2 or 3 digits, default is 2
